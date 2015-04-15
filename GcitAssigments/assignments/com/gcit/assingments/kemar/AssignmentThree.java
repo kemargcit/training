@@ -3,46 +3,53 @@
  */
 package com.gcit.assingments.kemar;
 
-import java.awt.List;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
  * @author kemar Apr 14, 20159:58:30 PM
  */
 public class AssignmentThree {
+	NumberFormat formatter = new DecimalFormat("#0.0");     
+
 	/**
 	 * Calculates the standard deviation of the averages
 	 * 
-	 * @param averageSet
-	 *            the data set
-	 * @param average
-	 *            the average the data set
-	 * @param numOfvalues
-	 *            the number of values in the data set
+	 * @param averageSet the data set
+	 * @param average the average the data set
+	 * @param numOfvalues the number of values in the data set
 	 * @return the standard deviation of the data set
 	 */
 //TODO fix standard deviation
 	
-	public double getStandardDeviation(Set<Double> averageSet, double average,
-			int numOfvalues) {
-
-		Iterator<Double> averageSetIterator = averageSet.iterator();
-		double sumXMinusAverageSquared = 0.0;
+	public String getStandardDeviation(ArrayList<Double> listOfAverages,
+			double average, int numOfvalues) {
 		double standardDeviation = 0.0;
-		while (averageSetIterator.hasNext()) {
-			sumXMinusAverageSquared = sumXMinusAverageSquared
-					+ (Math.pow(averageSetIterator.next() - average, 2));
+		double sum = 0.0;
+		Iterator<Double> averageListIterator = listOfAverages.iterator();
+
+		ArrayList<Double> variances = new ArrayList<Double>();
+		// third attempt
+		while (averageListIterator.hasNext()) {
+			variances.add(averageListIterator.next() - average);
 		}
-		standardDeviation = Math.sqrt(sumXMinusAverageSquared / numOfvalues);
-		return standardDeviation;
+
+		Iterator<Double> variancesIterator = variances.iterator();
+
+		while (variancesIterator.hasNext()) {
+			sum += Math.pow(variancesIterator.next(), 2);
+		}
+		standardDeviation = Math.sqrt(sum / numOfvalues - 1);
+
+		return formatter.format(standardDeviation);
 	}
 
 	/**
@@ -52,7 +59,7 @@ public class AssignmentThree {
 
 		AssignmentThree assignmentThree = new AssignmentThree();
 		
-		ArrayList<String> nameToMarksList = new ArrayList();//stores each line of the file
+		ArrayList<String> nameToMarksList = new ArrayList<String>();//stores each line of the file
 		
 		Map<String, Integer> nameToNumOfMarksMap = new TreeMap<String, Integer>();//stores the name - number of marks(k,v)
 
@@ -154,12 +161,17 @@ public class AssignmentThree {
 			Map<Double, String> averageToNameMap, int totalStudentAverage) {
 		
 		int numberOfStudents = nameToNumMarksMap.size();//get the number of students
-		Set<Double> setOfAverages = averageToNameMap.keySet();//get a set of student averages
+		
+		ArrayList<Double> listOfAverages = new ArrayList<Double>(averageToNameMap.keySet());
+
+		//Set<Double> setOfAverages = averageToNameMap.keySet();//get a set of student averages
+		
+		
 		double average = (double) totalStudentAverage / numberOfStudents;// calculate the average of the student averages
 		System.out.println("Number of Students : " + numberOfStudents);
-		System.out.println("The Average Student Mark is : " + average);
+		System.out.println("The Average Student Mark is : " + formatter.format(average));
 		System.out.println("The Stadard deviation of the Student Average is :"
-				+ assignmentThree.getStandardDeviation(setOfAverages, average,
+				+ assignmentThree.getStandardDeviation(listOfAverages, average,
 						numberOfStudents));
 	}
 
@@ -181,8 +193,17 @@ public class AssignmentThree {
 			System.out.println(name + " " + numberOfMarks + " " + averageMarks); //print list
 			System.out.println(" ");
 
-			averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
 
+			if (averageToNameMap.containsKey(averageMarks)){
+				
+				averageToNameMap.put(averageMarks, name);
+				
+				//averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
+
+			}
+			else{
+			averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
+			}
 		}
 	}
 
