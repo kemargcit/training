@@ -19,7 +19,7 @@ public class AssignmentTwo {
 	 Scanner sc = new Scanner(System.in);
 	 boolean isGameOver = false;
 	private  int maxNumberOfYouCanTake = 0;
-	AssignmentTwo assignmentTwo= new AssignmentTwo();
+	static AssignmentTwo assignmentTwo= new AssignmentTwo();
 
 
 	/**
@@ -236,17 +236,17 @@ public class AssignmentTwo {
 
 	public static void main(String[] args) {
 		
-		while (isGameOver == false) {
+		while (assignmentTwo.isGameOver == false) {
 			assignmentTwo.setUpGame();
 			assignmentTwo.play();
 
 			// if game is over which occurs in the plays method when pileSize
 			// gets to 0 and the game is won, check if the users wants to play
 			// again
-			if (isGameOver) {
+			if (assignmentTwo.isGameOver) {
 
-				if (replayOrExit() == true) {
-					isGameOver = false;
+				if (assignmentTwo.replayOrExit() == true) {
+					assignmentTwo.isGameOver = false;
 
 					continue;
 				} else {
