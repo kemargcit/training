@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 /**
- * @author kemar Apr 14, 20159:58:30 PM
+ * @author kemar Apr 14, 2015 9:58:30 PM
  */
 public class AssignmentThree {
 	NumberFormat formatter = new DecimalFormat("#0.0");     
@@ -29,7 +29,8 @@ public class AssignmentThree {
 	 * @return the standard deviation of the data set
 	 */
 //TODO fix standard deviation
-	
+	Map<Double, String> al = new TreeMap<Double, String>(Collections.reverseOrder());//stores average to name(K,V) in reversed order
+
 	public String getStandardDeviation(ArrayList<Double> listOfAverages,
 			double average, int numOfvalues) {
 		double standardDeviation = 0.0;
@@ -66,7 +67,7 @@ public class AssignmentThree {
 		Map<String, Integer> nameToTotalMarksMap = new TreeMap<String, Integer>();//stores name - average (K,V)
 		
 		Map<Double, String> averageToNameMap = new TreeMap<Double, String>(Collections.reverseOrder());//stores average to name(K,V) in reversed order
-		
+
 		File studentMarkFile = new File("studentMarks.txt");
 
 		int line = 0;//represents a line of the file
@@ -163,8 +164,6 @@ public class AssignmentThree {
 		int numberOfStudents = nameToNumMarksMap.size();//get the number of students
 		
 		ArrayList<Double> listOfAverages = new ArrayList<Double>(averageToNameMap.keySet());
-
-		//Set<Double> setOfAverages = averageToNameMap.keySet();//get a set of student averages
 		
 		
 		double average = (double) totalStudentAverage / numberOfStudents;// calculate the average of the student averages
@@ -186,25 +185,25 @@ public class AssignmentThree {
 			Map<String, Integer> nameToTotalMarksMap, Map<Double, String> averageToNameMap) {
 		System.out.println("Alphabetic Order");
 		Iterator<String> setIterator = nameToTotalMarksMap.keySet().iterator();
+		
 		while (setIterator.hasNext()) {
 			String name = setIterator.next();//get next name
+			String ax="do";
 			int numberOfMarks = nameToNumMarksMap.get(name); //number of marks for that name
 			double averageMarks = nameToTotalMarksMap.get(name) / numberOfMarks; //calculate the student average
 			System.out.println(name + " " + numberOfMarks + " " + averageMarks); //print list
 			System.out.println(" ");
-
-
-			if (averageToNameMap.containsKey(averageMarks)){
-				
-				averageToNameMap.put(averageMarks, name);
-				
-				//averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
-
-			}
-			else{
 			averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
-			}
+
+//			if (averageToNameMap.containsKey(averageMarks)){
+//
+//			}
+//			else{
+//			averageToNameMap.put(averageMarks, name);//create the  Average marks(K) to name(V) map
+//			}
+			
 		}
+		
 	}
 
 }
