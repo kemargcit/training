@@ -4,7 +4,7 @@
 	Anna 9
 	Anna 5
 	Edward 10
-jack 10
+ ken 10
 
 
 	

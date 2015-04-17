@@ -188,7 +188,6 @@ public class AssignmentThree {
 		
 		while (setIterator.hasNext()) {
 			String name = setIterator.next();//get next name
-			String ax="do";
 			int numberOfMarks = nameToNumMarksMap.get(name); //number of marks for that name
 			double averageMarks = nameToTotalMarksMap.get(name) / numberOfMarks; //calculate the student average
 			System.out.println(name + " " + numberOfMarks + " " + averageMarks); //print list
