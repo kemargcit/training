@@ -26,7 +26,9 @@ public class EditPublisher {
 
 
 	}
-
+/**
+ * edit publisher information menu
+ */
 	public void editPublisherMenu(){
 		int menuSelection;
 		System.out.println("1) Add Publisher\n2)Update Publisher\n3)Delete Publsher");
@@ -69,6 +71,10 @@ public class EditPublisher {
 		}
 
 	}
+	/**
+	 * add new publisher to library management system
+	 * @throws SQLException
+	 */
 	public void addPublisher() throws SQLException{
 
 		System.out.println("****Add Publisher****");
@@ -101,6 +107,10 @@ public class EditPublisher {
 		}
 
 	}
+	/**
+	 * updates publisher in library management system
+	 * @throws SQLException
+	 */
 	public void updatePublisher() throws SQLException{
 		System.out.println("****Update Publisher****");
 		String searchForAuthorQuery = null;
@@ -178,6 +188,10 @@ public class EditPublisher {
 
 
 	}
+	/**
+	 * deletes publisher from library management system
+	 * @throws SQLException
+	 */
 	public void deletePublisher() throws SQLException{
 		System.out.println("****Delete Publisher****");
 		String searchForPublisherQuery = null;

@@ -3,6 +3,8 @@
  */
 package com.gcit.librarymanagementsystem;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -19,7 +21,9 @@ public class Administrator {
 		System.out.print("********Administrator Menu***********");
 
 	}
-
+/**
+ * administrator menu
+ */
 public void adminMenu(){
 	int menuSelection=0;
 	sc=new Scanner(System.in);
@@ -42,8 +46,20 @@ case 2:
 	break;
 case 3:
 	EditLibraryBranch editBranch = new EditLibraryBranch();
-	
 	editBranch.editLibraryBranchMenu();
+	break;
+case 4:
+	EditBorrower editBorrower = new EditBorrower();
+	editBorrower.editborrowerMenu();
+	break;
+case 5:
+	UpdateBookLoan updateBookLoan = new UpdateBookLoan();
+	try {
+		updateBookLoan.updateDueDate();
+	} catch (SQLException | ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	break;
 default:
 	break;

@@ -10,28 +10,28 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 /**
- * @author kemar
- *Apr 17, 20151:22:05 PM
+ * @author kemar Apr 17, 20151:22:05 PM
  */
 public class EditLibraryBranch {
 	Scanner sc = new Scanner(System.in);
-	PreparedStatement pstmt ;
+	PreparedStatement pstmt;
 	Statement stmt = null;
-	DatabaseConnection dbConnection=new DatabaseConnection();
+	DatabaseConnection dbConnection = new DatabaseConnection();
 
-
-	public  EditLibraryBranch(){
+	public EditLibraryBranch() {
 		System.out.println("****** Edit Library Branch******");
-
 
 	}
 
-	public void editLibraryBranchMenu(){
+	/**
+	 * Add/Update/Delete Library Branches
+	 */
+	public void editLibraryBranchMenu() {
 		int menuSelection;
 		System.out.println("1) Add Branch\n2)Update Branch\n3)Delete Branch");
 		System.out.println("4 Main menu");
 		System.out.println("Enter a number from menu");
-		menuSelection=sc.nextInt();
+		menuSelection = sc.nextInt();
 		switch (menuSelection) {
 		case 1:
 			try {
@@ -49,71 +49,82 @@ public class EditLibraryBranch {
 				e.printStackTrace();
 			}
 			break;
-			case 3:
-			this.deleteBranch();
+		case 3:
+			try {
+				this.deleteBranch();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case 4:
-			MainMenu mainMenu=new MainMenu();
+			MainMenu mainMenu = new MainMenu();
 			mainMenu.mainMenuSetup();
 			break;
-
 
 		default:
 			break;
 		}
 
 	}
-	
-	public void addLibraryBranch() throws SQLException{
+
+	/**
+	 * adds library branch to library management system
+	 * 
+	 * @throws SQLException
+	 */
+	public void addLibraryBranch() throws SQLException {
 		System.out.println("****Add Library Branch****");
 		System.out.println("Enter a Branch name ");
 		String branchName = sc.next();
 		System.out.println("enter Branch Address");
 		String branchAddress = sc.next();
 		try {
-			String  insertIntoLibraryBranch = "INSERT INTO tbl_library_branch"
-					+ "(branchName,branchAddress) VALUES"
-					+ "(?,?)";
-			pstmt = dbConnection.databaseConnection().prepareCall(insertIntoLibraryBranch);
+			String insertIntoLibraryBranch = "INSERT INTO tbl_library_branch"
+					+ "(branchName,branchAddress) VALUES" + "(?,?)";
+			pstmt = dbConnection.databaseConnection().prepareCall(
+					insertIntoLibraryBranch);
 			pstmt.setString(1, branchName);
 			pstmt.setString(2, branchAddress);
 			pstmt.executeUpdate();
 			System.out.println("New Library Branch Added\n");
-	        this.editLibraryBranchMenu();
+			this.editLibraryBranchMenu();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("New Branch entry failed");
 
 			e.printStackTrace();
-		}finally{
+		} finally {
 			dbConnection.databaseConnection().close();
 			pstmt.close();
 
 		}
 
-		
 	}
+
 	/**
-	 * updates a library branch
-	 * @throws SQLException 
+	 * updates a library branch in library management system
+	 * 
+	 * @throws SQLException
 	 */
 	private void updateLibraryBranch() throws SQLException {
 		System.out.println("****Update Library Branch****");
 		String searchForBranchQuery = null;
 		String branchNameOrID = null;
-		System.out.println("Search for branch you want to update by id or name ");
+		System.out
+				.println("Search for branch you want to update by id or name ");
 		System.out.println("1)branchName \n2)branchId");
 		int selectedBranchId = 0;
 		int nameOrBranchId = sc.nextInt();
 		switch (nameOrBranchId) {
 		case 1:
 			System.out.println("enter Name");
-			branchNameOrID=sc.next();
+			branchNameOrID = sc.next();
 			searchForBranchQuery = "select * from tbl_library_branch where branchName =?";
 			break;
 		case 2:
 			System.out.println("enter PublisherId");
-			branchNameOrID=sc.next();
+			branchNameOrID = sc.next();
 			searchForBranchQuery = "select * from tbl_library_branch where branchId=?";
 			break;
 
@@ -122,16 +133,18 @@ public class EditLibraryBranch {
 		}
 
 		try {
-			pstmt = dbConnection.databaseConnection().prepareCall(searchForBranchQuery);
+			pstmt = dbConnection.databaseConnection().prepareCall(
+					searchForBranchQuery);
 			pstmt.setString(1, branchNameOrID);
 
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()){
-				System.out.println("branchId "+rs.getInt("branchId"));
-				System.out.println("branchName "+rs.getString("branchName"));
-				System.out.println("branchAddress "+rs.getString("branchAddress"));
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				System.out.println("branchId " + rs.getInt("branchId"));
+				System.out.println("branchName " + rs.getString("branchName"));
+				System.out.println("branchAddress "
+						+ rs.getString("branchAddress"));
 
-				selectedBranchId=rs.getInt("branchId");
+				selectedBranchId = rs.getInt("branchId");
 			}
 
 		} catch (SQLException e) {
@@ -139,7 +152,8 @@ public class EditLibraryBranch {
 			e.printStackTrace();
 		}
 
-		System.out.println("Enter name in columns you want to update or old value");
+		System.out
+				.println("Enter name in columns you want to update or old value");
 		System.out.println("enter branchName");
 		String updatedbranchName = sc.next();
 		System.out.println("enter branchAddress");
@@ -147,8 +161,9 @@ public class EditLibraryBranch {
 		String updateQuery = "update tbl_library_branch SET branchName = ?,branchAddress = ? where branchId= ?";
 
 		try {
-			PreparedStatement pstmt2 = dbConnection.databaseConnection().prepareCall(updateQuery);
-			pstmt2.setString(1, updatedbranchName);	
+			PreparedStatement pstmt2 = dbConnection.databaseConnection()
+					.prepareCall(updateQuery);
+			pstmt2.setString(1, updatedbranchName);
 			pstmt2.setString(2, updatedBranchAddress);
 			pstmt2.setInt(4, selectedBranchId);
 			pstmt2.executeUpdate();
@@ -158,19 +173,97 @@ public class EditLibraryBranch {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
+		} finally {
 			dbConnection.databaseConnection().close();
 			pstmt.close();
 		}
 
-
-		
-		
-		
 	}
-	
-	public void deleteBranch(){
+
+	/**
+	 * deletes library branches from library management system
+	 * 
+	 * @throws SQLException
+	 */
+	public void deleteBranch() throws SQLException {
 		System.out.println("****Delete Branch****");
+		String searchForBranchQuery = null;
+		String branchNameOrID = null;
+		System.out
+				.println("Search for Branch you want to delete by name or piublisherId ");
+		System.out.println("1)Branch name \n2)BranchId");
+		int selectedBranchId = 0;
+		int nameOrBranchId = sc.nextInt();
+		switch (nameOrBranchId) {
+		case 1:
+			System.out.println("enter Branch name");
+			branchNameOrID = sc.next();
+			searchForBranchQuery = "select * from tbl_library_branch where branchName =?";
+
+			break;
+		case 2:
+			System.out.println("enter branchId");
+			branchNameOrID = sc.next();
+			searchForBranchQuery = "select * from tbl_library_branch where branchId=?";
+
+			break;
+
+		default:
+			break;
+		}
+		try {
+			pstmt = dbConnection.databaseConnection().prepareCall(
+					searchForBranchQuery);
+			pstmt.setString(1, branchNameOrID);
+
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				System.out.println("branchId " + rs.getInt("branchId"));
+				System.out.println("branchName " + rs.getString("branchName"));
+				System.out.println("branchAddress "
+						+ rs.getString("branchAddress"));
+
+				selectedBranchId = rs.getInt("branchId");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbConnection.databaseConnection().close();
+			pstmt.close();
+
+		}
+
+		System.out.println("You are about to delete this Branch:"
+				+ branchNameOrID + "are you sure");
+		System.out.println("enter y/n");
+		String deleteOrNot = sc.next();
+
+		String updateQuery = "delete from tbl_library_branch  where branchId= ?";
+		if (deleteOrNot.equals("y")) {
+			try {
+				PreparedStatement pstmt2 = dbConnection.databaseConnection()
+						.prepareCall(updateQuery);
+				pstmt2.setInt(1, selectedBranchId);
+				pstmt2.executeUpdate();
+
+				System.out.println("record deleted ");
+				this.editLibraryBranchMenu();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				dbConnection.databaseConnection().close();
+				pstmt.close();
+
+			}
+
+		} else {
+			this.editLibraryBranchMenu();
+
+		}
+
 	}
 
 }
