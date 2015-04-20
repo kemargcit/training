@@ -109,16 +109,16 @@ public class StudentMarks {
 		}
 
 	}
-	
-	
+
+
 	public void getMeritLsit(){
 		System.out.println("MERIT ORDERED LIST");
 		System.out.println("MERIT     "+ "Name      "+"NUMBER OF GRADES   " +"AVERAGE    ");
-		
+
 		ArrayList<Student> studentList = new ArrayList<Student>();
 		Map<Integer, String> merritMap = new TreeMap<Integer, String>();
 
-		
+
 		studentList=this.readFile();
 		ListIterator<Student> studentListIterator = studentList.listIterator();
 		while(studentListIterator.hasNext()){
@@ -126,28 +126,30 @@ public class StudentMarks {
 			String name =aStudent.getName();
 			int marks =aStudent.getMarks();
 			
-			if(merritMap.containsValue(name)){
+			
+
+			/*if(merritMap.containsValue(name)){
 				int curentMarks = merritMap.keySet().iterator().next();
 				merritMap.replace(curentMarks+marks,name );
 			}
 			else{
 				merritMap.put(marks, name);
-			}
+			}*/
 
-			
-			
+
+
 		}
-		
-		
+
+
 		System.out.println(merritMap);
-		
+
 
 
 	}
 
 
 	public String getStandardDeviation(ArrayList<Double> listOfAverages,
-			
+
 			double average, int numOfvalues) {
 		NumberFormat formatter = new DecimalFormat("#0.0");     
 
