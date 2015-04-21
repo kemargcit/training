@@ -14,29 +14,30 @@ import com.gcit.lms.domain.Borrower;
  *Apr 19, 20159:52:06 PM
  */
 public class BorrowerService {
+	BorrowerDAO borrowerDAO = new BorrowerDAO();
 	public void addBorrower(Borrower borrower) throws SQLException{
-		new BorrowerDAO().addBorrower(borrower);
+		 borrowerDAO.addBorrower(borrower);
 	}
 
 	
 	public void updateBorrower(Borrower borrower) throws SQLException {
-		new BorrowerDAO().updateBorrower(borrower);
+		 borrowerDAO.updateBorrower(borrower);
 	}
 
 	
 	public void removeBorrower(Borrower borrower) throws SQLException{
-		new BorrowerDAO().removeBorrower(borrower);
+		 borrowerDAO.removeBorrower(borrower);
 	}
 	public List<Borrower> readAll() throws SQLException {
-		List<Borrower> borrowers = new BorrowerDAO().readAll();
+		List<Borrower> borrowers =  borrowerDAO.readAll();
 		return borrowers;
 	}
 	public Borrower getBorrowerByName(String borrowerName) throws SQLException{
-		Borrower borrower = new BorrowerDAO().getBorrowerByName(borrowerName);
+		Borrower borrower =  borrowerDAO.getBorrowerByName(borrowerName);
 		return borrower;
 	}
 	public Borrower getBorrowerByCardNo(int cardNo) throws SQLException{
-		Borrower borrower = new BorrowerDAO().getBorrowerByCardNo(cardNo);
+		Borrower borrower = borrowerDAO.getBorrowerByCardNo(cardNo);
 		return borrower;
 
 	}

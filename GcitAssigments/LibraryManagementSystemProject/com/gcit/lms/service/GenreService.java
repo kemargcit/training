@@ -15,34 +15,35 @@ import com.gcit.lms.domain.Genre;
  *Apr 19, 201510:03:25 PM
  */
 public class GenreService {
+	GenreDAO genreDAO = new GenreDAO();
 	public void addGenre(Genre genre) throws SQLException {
-		new GenreDAO().addGenre(genre);
+		genreDAO.addGenre(genre);
 		
 	}
 
 	public void updateGenre(Genre genre) throws SQLException {
-		new GenreDAO().updateGenre(genre);
+		genreDAO.updateGenre(genre);
 	}
 	public void removeGenre(Genre genre) throws SQLException {
-		new GenreDAO().removeGenre(genre);
+		genreDAO.removeGenre(genre);
 	}
 
 	public List<Book> getListOfBooksByGenre(int genreId){
-		List<Book> books= new GenreDAO().getListOfBooks(genreId);
+		List<Book> books= genreDAO.getListOfBooks(genreId);
 		return books;
 	}
 	
 	public List<Genre> readAllGenre() throws SQLException {
-		List<Genre> genres = new GenreDAO().readAllGenre();
+		List<Genre> genres = genreDAO.readAllGenre();
 		return genres;
 	}
 	
 	public Genre getGenreByName(String genreName) throws SQLException{
-		Genre genre = new GenreDAO().getGenreByName(genreName);
+		Genre genre = genreDAO.getGenreByName(genreName);
 		return genre;
 	}
 	public Genre getGenreById(int genreId) throws SQLException{
-		Genre genre = new GenreDAO().getGenreById(genreId);
+		Genre genre = genreDAO.getGenreById(genreId);
 		return genre;
 	}
 

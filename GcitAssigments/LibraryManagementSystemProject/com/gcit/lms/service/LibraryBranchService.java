@@ -14,31 +14,33 @@ import com.gcit.lms.domain.LibraryBranch;
  *Apr 19, 201511:17:53 PM
  */
 public class LibraryBranchService {
+	
+	LibraryBranchDAO libraryBranchDAO = new LibraryBranchDAO();
 	public void addBranch(LibraryBranch libraryBranch) throws SQLException {
-		new LibraryBranchDAO().addBranch(libraryBranch);
+		libraryBranchDAO.addBranch(libraryBranch);
 	}
 
 	public void updateBranch(LibraryBranch libraryBranch) throws SQLException {
-		new LibraryBranchDAO().updateBranch(libraryBranch);
+		libraryBranchDAO.updateBranch(libraryBranch);
 	}
 
 	public void removeBranch(LibraryBranch libraryBranch) throws SQLException {
-		new LibraryBranchDAO().removeBranch(libraryBranch);
+		libraryBranchDAO.removeBranch(libraryBranch);
 	}
 	
 	public List<LibraryBranch> readAll() throws SQLException {
-		List<LibraryBranch> libraryBranchs = new LibraryBranchDAO().readAll();
+		List<LibraryBranch> libraryBranchs = libraryBranchDAO.readAll();
 		return libraryBranchs;
 		
 				
 	}
 	public LibraryBranch getBranchByName(String branchName) throws SQLException{
-		LibraryBranch libraryBranch = new LibraryBranchDAO().getBranchByName(branchName);
+		LibraryBranch libraryBranch = libraryBranchDAO.getBranchByName(branchName);
 		return libraryBranch;
 	}
 	
 	public LibraryBranch getBranchById(int branchId) throws SQLException{
-		LibraryBranch libraryBranch = new LibraryBranchDAO().getBranchById(branchId);
+		LibraryBranch libraryBranch = libraryBranchDAO.getBranchById(branchId);
 		return libraryBranch;
 	}
 

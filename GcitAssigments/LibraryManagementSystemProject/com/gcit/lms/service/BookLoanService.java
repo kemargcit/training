@@ -14,17 +14,18 @@ import com.gcit.lms.domain.BookLoan;
  *Apr 19, 20159:46:16 PM
  */
 public class BookLoanService {
+	BookLoanDAO bookLoanDAO = new BookLoanDAO();
 	public void  addBookLoan(BookLoan bookLoan) throws SQLException{
-		new BookLoanDAO().addBookLoan(bookLoan);
+		bookLoanDAO.addBookLoan(bookLoan);
 	}
 
 	public List<BookLoan> getBookLoans() throws SQLException{
-		List<BookLoan> bookLoans = new BookLoanDAO().getBookLoans();
+		List<BookLoan> bookLoans =bookLoanDAO.getBookLoans();
 		return bookLoans;
 	}
 
 	public void overideDueDate(BookLoan bookLoan) throws SQLException{
-		 new BookLoanDAO().overideDueDate(bookLoan);
+		bookLoanDAO.overideDueDate(bookLoan);
 	}
 
 }

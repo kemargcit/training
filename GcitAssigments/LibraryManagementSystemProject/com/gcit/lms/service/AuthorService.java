@@ -15,38 +15,39 @@ import com.gcit.lms.domain.Book;
  *Apr 19, 20155:21:59 PM
  */
 public class AuthorService {
+	AuthorDAO authorDAO = new AuthorDAO();
 	
 	public void addAuthor(Author author) throws SQLException{
-		new AuthorDAO().addAuthor(author);
+		authorDAO.addAuthor(author);
 	}
 	
 	public void updateAuthor(Author author) throws SQLException {
-		new AuthorDAO().updateAuthor(author);
+		authorDAO.updateAuthor(author);
 	}
 
 	public void removeAuthor(Author author) throws SQLException{
-		new AuthorDAO().removeAuthor(author); 
+		authorDAO.removeAuthor(author); 
 	}
 	
 	public List<Book> getListOfBooks(int authorId) throws SQLException{
-		List<Book> books = new AuthorDAO().getListOfBooks(authorId);
+		List<Book> books = authorDAO.getListOfBooks(authorId);
 		return books;
 		
 	}
 	
 	public List<Author> readAll() throws SQLException {
-		List<Author> authors = new AuthorDAO().readAll();
+		List<Author> authors = authorDAO.readAll();
 		return authors;
 	}
 	
 	public Author getAuthorByName(String authorName) throws SQLException{
 		
-		Author author =  new AuthorDAO().getAuthorByName(authorName);
+		Author author =  authorDAO.getAuthorByName(authorName);
 		return author;
 	}
 
 	public Author getAuthorById(int authorId) throws SQLException{
-		Author author =  new AuthorDAO().getAuthorById(authorId);
+		Author author =  authorDAO.getAuthorById(authorId);
 		return author;
 	}
 

@@ -15,34 +15,35 @@ import com.gcit.lms.domain.Publisher;
  *Apr 19, 201511:30:57 PM
  */
 public class PublisherService {
+	PublisherDAO publisherDAO = new PublisherDAO();
 	public void addPublisher(Publisher publisher) throws SQLException {
-		new PublisherDAO().addPublisher(publisher);
+		publisherDAO.addPublisher(publisher);
 		
 	}
 	
 	public void updatePublisher(Publisher publisher) throws SQLException {
-		new PublisherDAO().updatePublisher(publisher);
+		publisherDAO.updatePublisher(publisher);
 	}
 
 	public void removePublisher(Publisher publisher) throws SQLException {
-		new PublisherDAO().removePublisher(publisher);
+		publisherDAO.removePublisher(publisher);
 	}
 
 	public List<Book> getListOfBooks(int publisherId){
-		List<Book> books = new PublisherDAO().getListOfBooks(publisherId);
+		List<Book> books = publisherDAO.getListOfBooks(publisherId);
 		return books;
 	}
 	
 	public List<Publisher> readAll() throws SQLException {
-		List<Publisher> publishers = new PublisherDAO().readAll();
+		List<Publisher> publishers = publisherDAO.readAll();
 		return publishers;
 	}
 	public Publisher getPublisherByName(String PublisherName) throws SQLException{
-		Publisher publisher = new PublisherDAO().getPublisherByName(PublisherName);
+		Publisher publisher = publisherDAO.getPublisherByName(PublisherName);
 		return publisher;
 	}
 	public Publisher getPublisherById(int publisherId) throws SQLException{
-		Publisher publisher = new PublisherDAO().getPublisherById(publisherId);
+		Publisher publisher = publisherDAO.getPublisherById(publisherId);
 		return publisher;
 	}
 
