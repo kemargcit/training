@@ -7,7 +7,8 @@ public class Book {
 	
 	private String title;
 	private int pubId;
-	List<Author> authors;
+	private List<Author> authors;
+	private Publisher publisher;
 	
 	public Book(){
 		super();
@@ -121,6 +122,20 @@ public class Book {
 	 */
 	public void setPubId(int pubId) {
 		this.pubId = pubId;
+	}
+
+	/**
+	 * @return the publisher
+	 */
+	public Publisher getPublisher() {
+		return publisher;
+	}
+
+	/**
+	 * @param publisher the publisher to set
+	 */
+	public void setPublisher(Publisher publisher) {
+		this.publisher = publisher;
 	}
 
 }

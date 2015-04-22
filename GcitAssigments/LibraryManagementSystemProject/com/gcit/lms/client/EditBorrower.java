@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.gcit.lms.domain.Borrower;
-import com.gcit.lms.service.BorrowerService;
+//import com.gcit.lms.service.BorrowerService;
 
 /**
  * @author kemar
@@ -16,7 +16,7 @@ import com.gcit.lms.service.BorrowerService;
 public class EditBorrower {
 
 	Scanner sc = new Scanner(System.in);
-	BorrowerService borrowerService = new BorrowerService();
+	//BorrowerService borrowerService = new BorrowerService();
 
 
 
@@ -85,7 +85,7 @@ public class EditBorrower {
 		borrower.setBorrowerAddress(borrowerAddress);
 		borrower.setBorrowerPhone(borrowerPhone);
 
-		borrowerService.addBorrower(borrower);
+		//borrowerService.addBorrower(borrower);
 		System.out.println("New borrower Added");
 		this.editborrowerMenu();
 
@@ -107,11 +107,11 @@ public class EditBorrower {
 		if(borrowerNameOrCardNo==1){
 			System.out.println("enter the name of the Borrower you want to update");
 			String borrowerName = sc.next();
-			borrower = borrowerService.getBorrowerByName(borrowerName);
+			//borrower = borrowerService.getBorrowerByName(borrowerName);
 		}else if(borrowerNameOrCardNo==2){
 			System.out.println("enter the card No of the Borrower you want to update");
 			int cardNo = sc.nextInt();
-			borrower = borrowerService.getBorrowerByCardNo(cardNo);
+			//borrower = borrowerService.getBorrowerByCardNo(cardNo);
 					}
 
 		System.out.println("you are about to update the following Borrower:");
@@ -130,7 +130,7 @@ public class EditBorrower {
 			borrower.setBorrowerPhone(borrowerPhone);
 			
 		
-			borrowerService.updateBorrower(borrower);
+			//borrowerService.updateBorrower(borrower);
 			System.out.println("borrower updated to "+borrower.getCardNo()+" "+borrower.getBorrowerName()+" "+borrower.getBorrowerAddress()+" "+borrower.getBorrowerPhone());
             this.editborrowerMenu();
 		}else if(sc.next().equalsIgnoreCase("n")){
@@ -147,18 +147,18 @@ public class EditBorrower {
 		if (nameOrCardNo==1){
 			System.out.println("enter the Borrower name");
              String borrowerName = sc.next();
-			 borrower= borrowerService.getBorrowerByName(borrowerName);
+			 //borrower= borrowerService.getBorrowerByName(borrowerName);
 		}else if(nameOrCardNo==2){
 			System.out.println("enter the card No");
 			int cardNo = sc.nextInt();
-			borrower= borrowerService.getBorrowerByCardNo(cardNo);			
+			//borrower= borrowerService.getBorrowerByCardNo(cardNo);			
 		}
 
 		System.out.println("You are about to delete this borrower : "+borrower.getBorrowerName()+" are you sure");
 		System.out.println("enter y/n");
 		String deleteOrNot = sc.next();
 		if (deleteOrNot.equals("y")){
-			borrowerService.removeBorrower(borrower);
+			//borrowerService.removeBorrower(borrower);
 			System.out.println("borrower deleted ");
 			this.editborrowerMenu();
 		}

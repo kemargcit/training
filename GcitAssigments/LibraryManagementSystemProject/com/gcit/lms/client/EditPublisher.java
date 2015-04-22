@@ -1,6 +1,6 @@
 /**
  * EditPublisher.java
- */
+ *//*
 package com.gcit.lms.client;
 
 import java.sql.SQLException;
@@ -9,10 +9,10 @@ import java.util.Scanner;
 import com.gcit.lms.domain.Publisher;
 import com.gcit.lms.service.PublisherService;
 
-/**
+*//**
  * @author kemar
  *Apr 17, 201512:06:32 PM
- */
+ *//*
 public class EditPublisher {
 	
     PublisherService publisherService = new  PublisherService();
@@ -22,9 +22,9 @@ public class EditPublisher {
 
 
 	}
-/**
+*//**
  * edit publisher information menu
- */
+ *//*
 	public void editPublisherMenu(){
 		int menuSelection;
 		System.out.println("1) Add Publisher\n2)Update Publisher\n3)Delete Publsher");
@@ -67,10 +67,10 @@ public class EditPublisher {
 		}
 
 	}
-	/**
+	*//**
 	 * add new publisher to library management system
 	 * @throws SQLException
-	 */
+	 *//*
 	public void addPublisher() throws SQLException{
 		Publisher publisher = new  Publisher();
 
@@ -135,10 +135,10 @@ public class EditPublisher {
 			
 		}	
 	}
-	/**
+	*//**
 	 * deletes publisher from library management system
 	 * @throws SQLException
-	 */
+	 *//*
 	public void deletePublisher() throws SQLException{
 		Publisher publisher = null;
 		System.out.println("****Delete Publisher****");
@@ -169,3 +169,4 @@ public class EditPublisher {
 		}	
 	}
 }
+*/

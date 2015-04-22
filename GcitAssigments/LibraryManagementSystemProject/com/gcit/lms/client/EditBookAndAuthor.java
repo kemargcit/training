@@ -1,6 +1,6 @@
 /**
  * EditBookAndAuthor.java
- */
+ *//*
 package com.gcit.lms.client;
 
 import java.sql.SQLException;
@@ -13,10 +13,10 @@ import com.gcit.lms.domain.Book;
 import com.gcit.lms.service.AuthorService;
 import com.gcit.lms.service.BookService;
 
-/**
+*//**
  * @author kemar
  *Apr 16, 201510:29:19 PM
- */
+ *//*
 public class EditBookAndAuthor {
 	Scanner sc = new Scanner(System.in);
 	BookService bookService=new BookService();
@@ -296,3 +296,4 @@ public class EditBookAndAuthor {
 	}
 
 }
+*/

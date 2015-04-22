@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import com.gcit.librarymanagementsystem.EditBookAndAuthor;
+import com.gcit.librarymanagementsystem.EditPublisher;
+import com.gcit.librarymanagementsystem.UpdateBookLoan;
+
 /**
  * @author kemar
  *Apr 16, 20159:59:05 PM
@@ -37,16 +41,16 @@ menuSelection=sc.nextInt();
 
 switch (menuSelection) {
 case 1:
-	EditBookAndAuthor editBookAndAuthor = new EditBookAndAuthor();
-	editBookAndAuthor.editBookOrAuthorMenu();
+	EditBook editBook = new EditBook();
+	editBook.editBookMenu();
 	break;
 	case 2:
 	EditPublisher editPublisher = new EditPublisher();
 	editPublisher.editPublisherMenu();
 	break;
 case 3:
-	EditLibraryBranch editBranch = new EditLibraryBranch();
-	editBranch.editLibraryBranchMenu();
+	/*EditLibraryBranch editBranch = new EditLibraryBranch();
+	editBranch.editLibraryBranchMenu();*/
 	break;
 case 4:
 	EditBorrower editBorrower = new EditBorrower();

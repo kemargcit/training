@@ -66,7 +66,7 @@ public class AuthorDAOTest {
 
 		try {
 
-			authorList = new AuthorDAO().readAll();
+			authorList = new AuthorDAO(null).readAll();
 		//	for (Book b2 : bookList) {
 				java.util.List<Book> a = authorList.get(0).getBooks();
 				for (Book a2 : a) {

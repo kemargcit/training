@@ -2,8 +2,6 @@ package com.gcit.lms.dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,9 +10,11 @@ import java.util.List;
 import com.gcit.lms.domain.Author;
 import com.gcit.lms.domain.Book;
 
+public class AuthorDAO extends BaseDAO<Author> implements Serializable {
 
-
-public class AuthorDAO implements Serializable{
+	public AuthorDAO(Connection conn) {
+		super(conn);
+	}
 
 	/**
 	 * 
@@ -22,143 +22,80 @@ public class AuthorDAO implements Serializable{
 	private static final long serialVersionUID = 1619700647002508164L;
 
 	public void addAuthor(Author author) throws SQLException {
-		Connection conn = getConnection();
-
-		String updateQuery = "insert into tbl_author (authorName) values (?)";
-		PreparedStatement pstmt = conn.prepareStatement(updateQuery);
-		pstmt.setString(1, author.getAuthorName());
-		pstmt.executeUpdate();
-		conn.close();
-		pstmt.close();
-		
-		
+		save("insert into tbl_author (authorName) values (?)",
+				new Object[] { author.getAuthorName() });
 
 	}
 
 	public void updateAuthor(Author author) throws SQLException {
-		Connection conn = getConnection();
-
-		String updateQuery = "update tbl_author set authorName = ? where authorId = ?";
-		PreparedStatement pstmt = conn.prepareStatement(updateQuery);
-		pstmt.setString(1, author.getAuthorName());
-		pstmt.setInt(2, author.getAuthorId());
-		pstmt.executeUpdate();
-		conn.close();
-		pstmt.close();
-
+		save("update tbl_author set authorName = ? where authorId = ?",
+				new Object[] { author.getAuthorName(), author.getAuthorId() });
 	}
 
 	public void removeAuthor(Author author) throws SQLException {
-		Connection conn = getConnection();
-
-		String removeQuery = "delete from tbl_author where authorId=?";
-		PreparedStatement pstmt = conn.prepareStatement(removeQuery);
-		pstmt.setInt(1, author.getAuthorId());
-		pstmt.executeUpdate();
-		conn.close();
-		pstmt.close();
+		save("delete from tbl_author where authorId=?",
+				new Object[] { author.getAuthorId() });
 	}
 
-	private Connection getConnection() throws SQLException {
-		Connection conn;
-		conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/library", "root", "stpatrick876");
-		return conn;
-	}
-	public List<Book> getListOfBooks(int authorId) throws SQLException{
-		List<Book> books = new ArrayList<Book>();
-
-		String select = "select tbl_book.bookId, tbl_book.title,tbl_book.pubId from tbl_book inner "
-				+ "join tbl_book_authors on  tbl_book.bookId=tbl_book_authors.bookId "
-				+ "inner join tbl_author "
-				+ "on tbl_book_authors.authorId=tbl_author.authorId "
-				+ "where tbl_author.authorId=?";
-		Connection conn = getConnection();
-
-		PreparedStatement pstmt = conn.prepareStatement(select);
-
-		try {
-			pstmt.setInt(1, authorId);
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()) {
-				Book book = new Book();
-				book.setBookId(rs.getInt("BookId"));
-				book.setTitle(rs.getString("title"));
-				book.setPubId(rs.getInt("pubId"));
-				books.add(book);
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			conn.close();
-			pstmt.close();
-		}
-		return books;
-		
-	}
-
+	@SuppressWarnings("unchecked")
 	public List<Author> readAll() throws SQLException {
-		String select = "select * from tbl_author";
-		
-		Connection conn = getConnection();
+		return  (List<Author>) read("select * from tbl_author", null);
+	}
 
-		PreparedStatement stmt = conn.prepareStatement(select);
-		ResultSet rs = stmt.executeQuery();
-
-		List<Author> authors = new ArrayList<Author>();
-		while(rs.next()) {
-			Author author = new Author();
-			int authorId = rs.getInt("authorId");
-			author.setAuthorId(authorId);
-			author.setAuthorName(rs.getString("authorName"));
-         	author.setBooks(this.getListOfBooks(authorId));
-
-			authors.add(author);
+	public Author readOne(int authorId) throws SQLException {
+		@SuppressWarnings("unchecked")
+		List<Author> authors = (List<Author>) read(
+				"select * from tbl_author where authorId = ?",
+				new Object[] { authorId });
+		if (authors != null && authors.size() > 0) {
+			return authors.get(0);
+		} else {
+			return null;
 		}
-         conn.close();
-         stmt.close();
+	}
+	
+	public Author readOneByName(String authorName) throws SQLException {
+		@SuppressWarnings("unchecked")
+		List<Author> authors = (List<Author>) read(
+				"select * from tbl_author where authorName = ?",
+				new Object[] { authorName });
+		if (authors != null && authors.size() > 0) {
+			return authors.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	protected List<Author> mapResults(ResultSet rs) throws SQLException {
+		List<Author> authors = new ArrayList<Author>();
+		BookDAO bDAO = new BookDAO(conn);
+		while (rs.next()) {
+			Author a = new Author();
+			a.setAuthorId(rs.getInt("authorId"));
+			a.setAuthorName(rs.getString("authorName"));
+
+			@SuppressWarnings("unchecked")
+			List<Book> books = (List<Book>) bDAO.readFirstLevel("select * from tbl_book where bookId in "
+					+ "(select bookId from tbl_book_authors where authorId = ?)", new Object[]{a.getAuthorId()});
+			a.setBooks(books);
+			
+			authors.add(a);
+		}
 		return authors;
 	}
 
-	public Author getAuthorByName(String authorName) throws SQLException{
-		String select = "select * from tbl_author where authorName=?";
-		Connection conn = getConnection();
+	@Override
+	protected List<Author> mapResultsFirstLevel(ResultSet rs) throws SQLException {
+		List<Author> authors = new ArrayList<Author>();
+		BookDAO bDAO = new BookDAO(conn);
+		while (rs.next()) {
+			Author a = new Author();
+			a.setAuthorId(rs.getInt("authorId"));
+			a.setAuthorName(rs.getString("authorName"));
 
-		PreparedStatement pstmt =conn.prepareStatement(select);
-		pstmt.setString(1, authorName);
-
-		ResultSet rs = pstmt.executeQuery();
-
-		Author author = new Author();
-		if(rs.next()) {
-			author.setAuthorId(rs.getInt("authorId"));
-			author.setAuthorName(rs.getString("authorName"));
-
+			authors.add(a);
 		}
-         conn.close();
-         pstmt.close();
-		return author;	
+		return authors;
 	}
-	public Author getAuthorById(int authorId) throws SQLException{
-		String select = "select * from tbl_author where authorId=?";
-		Connection conn = getConnection();
-
-		PreparedStatement pstmt = conn.prepareStatement(select);
-		pstmt.setInt(1, authorId);
-
-		ResultSet rs = pstmt.executeQuery();
-
-		Author author = new Author();
-		if(rs.next()) {
-			author.setAuthorId(rs.getInt("authorId"));
-			author.setAuthorName(rs.getString("authorName"));
-
-		}
-      conn.close();
-      pstmt.close();
-		return author;	
-	}
-
 }

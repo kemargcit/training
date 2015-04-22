@@ -18,60 +18,68 @@ import com.gcit.lms.domain.Borrower;
  * @author kemar
  *Apr 19, 20152:19:57 PM
  */
-public class BorrowerDAO implements Serializable {
+public class BorrowerDAO extends BaseDAO<Borrower> implements  Serializable {
 
+	/**
+	 * @param conn
+	 */
+	public BorrowerDAO(Connection conn) {
+		super(conn);
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6162620077049608551L;
-	private Connection getConnection() throws SQLException {
-		Connection conn;
-		conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/library", "root", "stpatrick876");
-		return conn;
-	}
+	
 	
 	public void addBorrower(Borrower borrower) throws SQLException{
-		Connection conn = getConnection();
 
-		String updateQuery = "insert into tbl_borrower (cardNo,name,address,phone) values (?,?,?,?)";
-		PreparedStatement pstmt = conn.prepareStatement(updateQuery);
-		pstmt.setInt(1, borrower.getCardNo());
-		pstmt.setString(2, borrower.getBorrowerName());
-		pstmt.setString(3, borrower.getBorrowerAddress());
-		pstmt.setString(4, borrower.getBorrowerPhone());
-
-
-		pstmt.executeUpdate();
-
+		String updateQuery = "insert into tbl_borrower (name,address,phone) values (?,?,?)";
+		save(updateQuery,new Object []{ borrower.getBorrowerName(), borrower.getBorrowerAddress(), borrower.getBorrowerPhone()});
 	}
 	public void updateBorrower(Borrower borrower) throws SQLException {
-		Connection conn = getConnection();
-
 		String updateQuery = "update tbl_borrower set name = ? , address=?, phone=? where cardNo = ?";
-		PreparedStatement pstmt = conn.prepareStatement(updateQuery);
-		pstmt.setString(1, borrower.getBorrowerName());
-		pstmt.setString(2, borrower.getBorrowerAddress());
-		pstmt.setString(3, borrower.getBorrowerPhone());
-		pstmt.setInt(4, borrower.getCardNo());
-
-		pstmt.executeUpdate();
-
+		save(updateQuery, new Object []{borrower.getBorrowerName(), borrower.getBorrowerAddress(),  borrower.getBorrowerPhone(), borrower.getCardNo()});
 	}
 	public void removeBorrower(Borrower borrower) throws SQLException{
-		Connection conn = getConnection();
-
 		String removeQuery = "delete from tbl_borrower where cardNo=?";
-		PreparedStatement pstmt = conn.prepareStatement(removeQuery);
-		pstmt.setInt(1, borrower.getCardNo());
-		pstmt.executeUpdate();
+		save (removeQuery, new Object []{borrower.getCardNo()});
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public List<Borrower> readAll() throws SQLException {
 		String select = "select * from tbl_borrower";
-		PreparedStatement stmt = getConnection().prepareStatement(select);
-		ResultSet rs = stmt.executeQuery();
+      return    (List<Borrower>) read(select,null);
+	
+	}
+	public Borrower getBorrowerByName(String borrowerName) throws SQLException{
+		String select = "select * from tbl_borrower where name=?";
+      @SuppressWarnings("unchecked")
+	List<Borrower> borrowers=(List<Borrower>) read(select,new Object[]{borrowerName});
+  if(borrowers!=null&&borrowers.size()>0)
+  {
+		return borrowers.get(0);	
+  }
+  else return null;
+	}
+	public Borrower getBorrowerByCardNo(int cardNo) throws SQLException{
+		String select = "select * from tbl_borrower where cardNo=?";
+		 @SuppressWarnings("unchecked")
+			List<Borrower> borrowers=(List<Borrower>) read(select,new Object[]{cardNo});
+		  if(borrowers!=null&&borrowers.size()>0)
+		  {
+				return borrowers.get(0);	
+		  }
+		  else return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.gcit.lms.dao.BaseDAO#mapResults(java.sql.ResultSet)
+	 */
+	@Override
+	protected List<Borrower> mapResults(ResultSet rs) throws SQLException {
 		List<Borrower> borrowers = new ArrayList<Borrower>();
 		while(rs.next()) {
 			Borrower borrower = new Borrower();
@@ -83,42 +91,15 @@ public class BorrowerDAO implements Serializable {
 		}
 		
 
-		return borrowers;
-	}
-	public Borrower getBorrowerByName(String borrowerName) throws SQLException{
-		String select = "select * from tbl_borrower where name=?";
-		PreparedStatement pstmt = getConnection().prepareStatement(select);
-		pstmt.setString(1, borrowerName);
+		return borrowers;	}
 
-		ResultSet rs = pstmt.executeQuery();
-
-		Borrower borrower = new Borrower();
-		if(rs.next()) {
-			  borrower.setCardNo(rs.getInt("cardNo"));
-			  borrower.setBorrowerName(rs.getString("name"));
-			  borrower.setBorrowerAddress(rs.getString("address"));
-			  borrower.setBorrowerPhone(rs.getString("phone"));
-		}
-
-		return borrower;	
-	}
-	public Borrower getBorrowerByCardNo(int cardNo) throws SQLException{
-		String select = "select * from tbl_borrower where cardNo=?";
-		PreparedStatement pstmt = getConnection().prepareStatement(select);
-		pstmt.setInt(1, cardNo);
-
-		ResultSet rs = pstmt.executeQuery();
-
-		Borrower borrower = new Borrower();
-		if(rs.next()) {
-			  borrower.setCardNo(rs.getInt("cardNo"));
-			  borrower.setBorrowerName(rs.getString("name"));
-			  borrower.setBorrowerAddress(rs.getString("address"));
-			  borrower.setBorrowerPhone(rs.getString("phone"));
-
-		}
-
-		return borrower;	
+	/* (non-Javadoc)
+	 * @see com.gcit.lms.dao.BaseDAO#mapResultsFirstLevel(java.sql.ResultSet)
+	 */
+	@Override
+	protected List<?> mapResultsFirstLevel(ResultSet rs) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

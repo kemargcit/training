@@ -1,6 +1,6 @@
 /**
  * EditLibraryBranch.java
- */
+ *//*
 package com.gcit.lms.client;
 
 import java.sql.SQLException;
@@ -9,9 +9,9 @@ import java.util.Scanner;
 import com.gcit.lms.domain.LibraryBranch;
 import com.gcit.lms.service.LibraryBranchService;
 
-/**
+*//**
  * @author kemar Apr 17, 20151:22:05 PM
- */
+ *//*
 public class EditLibraryBranch {
 	Scanner sc = new Scanner(System.in);
 	LibraryBranchService libraryBranchService = new LibraryBranchService();
@@ -21,9 +21,9 @@ public class EditLibraryBranch {
 
 	}
 
-	/**
+	*//**
 	 * Add/Update/Delete Library Branches
-	 */
+	 *//*
 	public void editLibraryBranchMenu() {
 		int menuSelection;
 		System.out.println("1) Add Branch\n2)Update Branch\n3)Delete Branch");
@@ -67,11 +67,11 @@ public class EditLibraryBranch {
 	}
 	
 
-	/**
+	*//**
 	 * adds library branch to library management system
 	 * 
 	 * @throws SQLException
-	 */
+	 *//*
 	public void addLibraryBranch() throws SQLException {
 		System.out.println("****Add Library Branch****");
 		System.out.println("Enter a Branch name ");
@@ -159,3 +159,4 @@ public void deleteLibraryBranch() throws SQLException{
 	}
 }
 }
+*/

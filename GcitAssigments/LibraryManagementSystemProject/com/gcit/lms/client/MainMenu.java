@@ -24,6 +24,11 @@ public class MainMenu {
 		menuSelection = sc.nextInt();
 
 		switch (menuSelection) {
+		case 1:
+			Librarian librarian = new Librarian();
+			librarian.LibrarianMenu();
+			break;
+
 		case 2:
 			Administrator admin = new Administrator();
 			admin.adminMenu();

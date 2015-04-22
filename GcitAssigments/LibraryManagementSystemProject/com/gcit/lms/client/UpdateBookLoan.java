@@ -1,6 +1,6 @@
 /**
  * UpdateBookLoan.java
- */
+ *//*
 package com.gcit.lms.client;
 
 import java.sql.SQLException;
@@ -16,10 +16,10 @@ import com.gcit.lms.service.BookService;
 import com.gcit.lms.service.BorrowerService;
 import com.gcit.lms.service.LibraryBranchService;
 
-/**
+*//**
  * @author kemar bell
  *Apr 17, 20154:29:21 PM
- */
+ *//*
 public class UpdateBookLoan {
 
 	Scanner sc = new Scanner(System.in);
@@ -33,11 +33,11 @@ public class UpdateBookLoan {
 
 
 	}
-/**
+*//**
  * override the due date for a loan
  * @throws SQLException
  * @throws ParseException
- */
+ *//*
 
 	
 
@@ -66,3 +66,4 @@ public class UpdateBookLoan {
 
 
 }
+*/
