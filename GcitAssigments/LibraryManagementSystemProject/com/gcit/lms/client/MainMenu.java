@@ -5,6 +5,8 @@ package com.gcit.lms.client;
 
 import java.util.Scanner;
 
+import com.gcit.lms.domain.Borrower;
+
 /**
  * @author kemar Apr 16, 20159:42:06 PM
  */
@@ -32,6 +34,11 @@ public class MainMenu {
 		case 2:
 			Administrator admin = new Administrator();
 			admin.adminMenu();
+			break;
+			
+		case 3:
+			BorrowerMain borrowerMain = new  BorrowerMain();
+			borrowerMain.borrowerMenu();
 			break;
 
 		default:

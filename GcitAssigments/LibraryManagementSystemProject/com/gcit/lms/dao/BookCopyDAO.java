@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.gcit.lms.domain.Book;
 import com.gcit.lms.domain.BookCopy;
+import com.gcit.lms.domain.LibraryBranch;
 
 /**
  * @author kemar
@@ -39,7 +40,7 @@ public class BookCopyDAO extends BaseDAO<BookCopy> implements Serializable {
 
 	public void updateBookCopies(BookCopy bookCopy) throws SQLException{
 		String update = "update tbl_book_copies set noOfCopies=? where bookId=? and branchId=?";
-		save(update, new Object[]{bookCopy.getNumOfCopies(),bookCopy.getLibraryBranch().getBranchId(),bookCopy.getNumOfCopies()});
+		save(update, new Object[]{bookCopy.getNumOfCopies(),bookCopy.getBook().getBookId(), bookCopy.getLibraryBranch().getBranchId()});
 	}
 	  /**
 	 * @param branchId
@@ -49,8 +50,13 @@ public class BookCopyDAO extends BaseDAO<BookCopy> implements Serializable {
 	 */
 	public BookCopy readOne(int branchId, int bookid) throws SQLException{
 		  String select = "Select * from tbl_book_copies where bookId=? and branchId=?";
-		  read(select,new Object[]{branchId,bookid});
-		return null;
+		                     
+		 @SuppressWarnings("unchecked")
+		List <BookCopy> bookCopies= (List<BookCopy>) read(select,new Object[]{bookid,branchId});
+		if (bookCopies!=null&&bookCopies.size()>0){
+		return bookCopies.get(0);
+		}else 
+			return null;
 		  
 	  }
 	/* (non-Javadoc)
@@ -62,11 +68,16 @@ public class BookCopyDAO extends BaseDAO<BookCopy> implements Serializable {
 		List<BookCopy> bookCopies = new ArrayList<BookCopy>();
 		while(rs.next()){
 			BookCopy bookCopy = new BookCopy();
-			//Book book = new BookDAO(conn).r
-		//	bookCopy.setBook();
+			Book book = new BookDAO(conn).readOne(rs.getInt("bookId"));
+			LibraryBranch libraryBranch = new LibraryBranchDAO(conn).getBranchById(rs.getInt("branchId"));
+			
+			bookCopy.setBook(book);
+			bookCopy.setLibraryBranch(libraryBranch);
+			bookCopy.setNumOfCopies(rs.getInt("noOfCopies"));
+			bookCopies.add(bookCopy);
 		}
 				
-		return null;
+		return bookCopies;
 	}
 
 	/* (non-Javadoc)

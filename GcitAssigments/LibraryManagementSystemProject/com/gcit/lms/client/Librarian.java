@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.gcit.lms.domain.Book;
+import com.gcit.lms.domain.BookCopy;
 import com.gcit.lms.domain.LibraryBranch;
 import com.gcit.lms.service.AdministratorService;
 import com.gcit.lms.service.LibrarianService;
@@ -82,6 +83,8 @@ public class Librarian {
 		
 
 	}
+	
+	//TODO: get rid  of list parameter
 		public void librarianMenu2(List<LibraryBranch> libraryBranchs ) throws SQLException{
 		System.out.println("choose branch");
 		
@@ -136,21 +139,23 @@ public class Librarian {
 			System.out.println(bookNum++ +") "+book.getBookId()+", "+book.getTitle());
 		}
 
-    	 System.out.println(" enter book number");
+    	 System.out.println("Enter book number");
 		int selectedBookNumber = sc.nextInt();
 		int selctedBookId = books.get(selectedBookNumber-1).getBookId();
 		String selectedBookTiltle = books.get(selectedBookNumber-1).getTitle();
 		System.out.println("you have selected :"+selctedBookId+" "+selectedBookTiltle);
 		selectedBook=administratorService.readOneBookId(selctedBookId);
-
-		int numOfCopies=0;
-		numOfCopies = librarianService.getNumOfBookCopies(selectedBook,libraryBranch).getNumOfCopies();
+         BookCopy bookCopy = librarianService.getNumOfBookCopies(selectedBook,libraryBranch);
+		int numOfCopies;
+		numOfCopies = bookCopy.getNumOfCopies();
 		System.out.println("there are "+numOfCopies+" coppies in "+libraryBranch.getBranchName());
 		
-		
-		
-		
-		
+		System.out.println("Enter new number of copies");
+		int newNumOfCopies=sc.nextInt();
+		bookCopy.setNumOfCopies(newNumOfCopies);
+		librarianService.updateBookCopy(bookCopy);
+	    System.out.println("book copy updated to "+bookCopy.getNumOfCopies());
+	    this.librarianMenu1();
 	}
 
 //	

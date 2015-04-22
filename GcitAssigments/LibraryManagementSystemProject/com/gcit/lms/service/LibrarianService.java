@@ -63,10 +63,21 @@ public class LibrarianService {
 	public BookCopy getNumOfBookCopies(Book book, LibraryBranch libraryBranch) throws SQLException {
 		Connection conn=this.getConnection();
 		BookCopyDAO bookCopyDAO = new BookCopyDAO(conn);
+		
 		BookCopy bookCopy=bookCopyDAO.readOne(libraryBranch.getBranchId(), book.getBookId());
 		
 		
 		return bookCopy;
+	}
+
+	/**
+	 * @param bookCopy
+	 * @throws SQLException 
+	 */
+	public void updateBookCopy(BookCopy bookCopy) throws SQLException {
+		Connection conn=this.getConnection();
+		BookCopyDAO bookCopyDAO = new BookCopyDAO(conn);
+ 		bookCopyDAO.updateBookCopies(bookCopy);
 	}
 
 }
