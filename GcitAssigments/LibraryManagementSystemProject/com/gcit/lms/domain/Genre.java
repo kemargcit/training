@@ -15,6 +15,22 @@ public class Genre implements Serializable{
 	private String name;
 	
 	private List<Book> books;
+	
+	private List<Genre> genres;
+
+	/**
+	 * @return the genres
+	 */
+	public List<Genre> getGenres() {
+		return genres;
+	}
+
+	/**
+	 * @param genres the genres to set
+	 */
+	public void setGenres(List<Genre> genres) {
+		this.genres = genres;
+	}
 
 	/**
 	 * @return the genreId
