@@ -30,7 +30,8 @@ import com.gcit.lms.service.AdministratorService;
  * Servlet implementation class AdministratorServlet
  */
 @WebServlet({ "/addAuthor", "/addPublisher", "/addBook", "/deleteAuthor","/addBorrower","/editAuthor","/deleteBook",
-	"/editBook","/deletePublisher","/editPublisher","/deleteBorrower","/editBorrower","/editDueDate"})
+	"/editBook","/deletePublisher","/editPublisher","/deleteBorrower","/editBorrower","/editDueDate","/pageAuthors"
+	,"/searchAuthors","/getCountForSearch"})
 public class AdministratorServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -61,12 +62,102 @@ public class AdministratorServlet extends HttpServlet {
 		case "/editAuthor":
 			editAuthor(request, response);
 			break;
-		case "/deletePublisher":
+		 case "/deletePublisher":
 			deletePublisher(request, response);
 			break;  
-		case "/deleteBorrower":
+		 case "/deleteBorrower":
 			deleteBorrower(request, response);
 			break; 
+			case "/getCountForSearch":
+				String searchStringc = request.getParameter("searchString");
+			try {
+				int count = new AdministratorService().searchAuthorCount(searchStringc);
+				StringBuilder str = new StringBuilder();
+                 str.append(count);
+ 				response.getWriter().write(str.toString());
+
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        				break; 
+		  case "/pageAuthors": {
+			
+			String pageNo = request.getParameter("pageNo");
+			String searchString = request.getParameter("searchString");
+			try {
+				List<Author> authors = new AdministratorService().searchAuthorByName(searchString, Integer.parseInt(pageNo), 10);
+				StringBuilder str = new StringBuilder();
+				
+				str.append("<tr><th>Id</th><th>Name</th><th>Edit</th><th>Delete</th></tr>");
+	
+				for (Author a : authors) {
+					str.append("<tr><td>"+a.getAuthorId()+"</td><td>"+a.getAuthorName()+"</td>");
+					//edit button
+					str.append("<td><button class='btn btn-xs btn-info' href='editAuthor.jsp?authorIdToEdit="+a.getAuthorId()+"' data-target='#myModal1' data-toggle='modal'>");
+					str.append("<i class='glyphicon glyphicon-edit'></i>Edit</button></td>");
+					
+					
+					//my- delete button
+					str.append("<td><form method='get' action='deleteAuthor' accept-charset='UTF-8' style='display:inline'>");
+				     str.append("<input type='hidden' name='authorId' value='"+a.getAuthorId()+"'>");
+				     str.append( "<button class='btn btn-xs btn-danger' type='button' data-toggle='modal' data-target='#confirmDelete' data-title='Delete Author' data-message='Are you sure you want to delete this Author ?'>");
+				     str.append("<i class='glyphicon glyphicon-trash'></i> Delete</button></form></td></tr>");
+			
+				     
+				     
+				     
+					
+					
+					
+					
+					//my- delete with onclick(works)
+				/*str.append("<td><button id='deleteBtn' data-toggle='modal' data-target='#confirmDelete' class='btn btn-danger' onclick='deleteAuthor("+a.getAuthorId()+")';>"
+					+ "<i class='glyphicon glyphicon-trash'></i> Delete</button></td></tr>");*/
+					
+					
+					//my-edit button
+					/*str.append("<td><div ><div > <a href='#' class='btn btn-info'"
+							+ "rel='popover' data-togle='modal' data-content='<form id='mainForm' name='mainForm' method='get' action='editAuthor'>");
+					str.append("<p><label>id :</label><input type='text' readonly='readonly' value'<%=a.getAuthorId()%>' id='txtName' name='authorId' />"
+);
+					
+					str.append(   "</p><p><label>Name :</label><input type='text' value='<%=a.getAuthorName()%>' id='txtName' name='authorName' /></p>"); 
+					str.append(    "<p><input type='submit' name='Submit' value='Submit' /></p>");
+							
+					str.append("</form>' data-placement='top' data-original-title='Fill in form'> <i class='glyphicon glyphicon-edit'></i>Edit</a></div></div></td>" );*/
+					
+					//str.append("<td><button id='ed'> click</button></td>");
+					
+					
+					
+					//my-edit button atempt two
+//					str.append("<td><div> <a id='ed' href='#' class='btn btn-info'"
+//							+ "rel='popover' data-togle='modal' data-content='<form  > "
+//							+ "<label>id :</label> "
+//							+ "<input '/>"
+//							
+//							+ "</form>'"
+//							+ " data-placement='top' data-original-title='Fill in form' onclick='editAuthor()';"   
+//							+ "><i class='glyphicon glyphicon-edit'></i>Edit</a><div></td>");
+//					
+					
+					
+					
+					
+					
+				}
+
+				response.getWriter().write(str.toString());
+			
+			
+			
+			//pageAuthors(request,response);
+			break;
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
 		default:
 			break;
 		}
@@ -77,6 +168,7 @@ public class AdministratorServlet extends HttpServlet {
 
 	}
 
+	
 	/**
 	 * @param request
 	 * @param response
@@ -190,7 +282,7 @@ public class AdministratorServlet extends HttpServlet {
 
 		switch (function) {
 		case "/addAuthor":
-			addAuthor(request);
+			addAuthor(request,response);
 			break;  
 
 		case "/addBook":
@@ -219,6 +311,10 @@ public class AdministratorServlet extends HttpServlet {
 		case "/editDueDate":
 			editDueDater(request, response);
 			break; 
+			case "/searchAuthors":{
+				searchAuthor(request, response);
+				break; 
+			}
 		default:
 			break;
 		}
@@ -230,6 +326,7 @@ public class AdministratorServlet extends HttpServlet {
 	/**
 	 * @param request
 	 * @param response
+	 * 
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
@@ -587,20 +684,75 @@ public class AdministratorServlet extends HttpServlet {
 
 	/**
 	 * @param request
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	public void addAuthor(HttpServletRequest request) {
+	public void addAuthor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//addAuthor
 		String authorName = request.getParameter("authorName");
 
 		Author author = new Author();
 		author.setAuthorName(authorName);
 
+
 		try {
 			new AdministratorService().addAuthor(author);
+			request.setAttribute("result", "author added successfuly");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+			request.setAttribute("result", "author add failed "+e.getMessage());
 
+		}
+
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(
+				"/addAuthor.jsp");
+		rd.forward(request, response);
+	}
+	
+	private void pageAuthors(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String pageNo = request.getParameter("pageNo");
+		String searchString = request.getParameter("searchString");
+
+		
+			try {
+				List<Author> authors = new AdministratorService().searchAuthorByName(searchString, Integer.parseInt(pageNo), 10);
+				int count = new AdministratorService().searchAuthorCount(searchString);
+
+				request.setAttribute("count", count);
+				request.setAttribute("searchString", searchString);
+				request.setAttribute("authors", authors);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				request.setAttribute("result",
+						"Publisher add failed!: " + e.getMessage());
+				
+			}
+			
+		
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(
+				"/listAuthors.jsp");
+		rd.forward(request, response);
+	}
+	private void searchAuthor(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String searchString = request.getParameter("searchString");
+		String pageNo = request.getParameter("pageNo");
+		String pageSize = request.getParameter("pageSize");
+
+		try {
+			List<Author> authors = new AdministratorService().searchAuthorByName(searchString,Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+			int count = new AdministratorService().searchAuthorCount(searchString);
+			request.setAttribute("count", count);
+
+			request.setAttribute("searchString", searchString);
+			request.setAttribute("authors", authors);
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("result",
+					"search failed !: " + e.getMessage());
+		}
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(
+				"/listAuthors.jsp");
+		rd.forward(request, response);
+
+	}
 }

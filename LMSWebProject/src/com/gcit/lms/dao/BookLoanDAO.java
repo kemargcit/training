@@ -76,6 +76,13 @@ public class BookLoanDAO extends BaseDAO<BookLoan> implements Serializable {
 		return  (List<BookLoan>) read("select * from tbl_book_loans where cardNo=?", new Object [] {cardNo});
 		
 	}
+	@SuppressWarnings("unchecked")
+	public List<BookLoan> readAllByBorrowerBook(Borrower borrower,Book book) throws SQLException {
+	return   (List<BookLoan>) read("select * from tbl_book_loans where cardNo=? and bookId=?", new Object [] {borrower.getCardNo(),book.getBookId()});
+
+		
+	}
+
 
 	/* (non-Javadoc)
 	 * @see com.gcit.lms.dao.BaseDAO#mapResults(java.sql.ResultSet)

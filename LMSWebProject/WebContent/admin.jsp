@@ -1,5 +1,6 @@
 <%@include file="include.html" %>
              <link href="resources/styles.css" rel="stylesheet">
+             
    <script src="resources/script2.js"></script>
 
 ${result}

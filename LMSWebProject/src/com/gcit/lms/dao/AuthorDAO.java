@@ -2,6 +2,7 @@ package com.gcit.lms.dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import com.gcit.lms.domain.Author;
 import com.gcit.lms.domain.Book;
+
 
 public class AuthorDAO extends BaseDAO<Author> implements Serializable {
 
@@ -38,7 +40,9 @@ public class AuthorDAO extends BaseDAO<Author> implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Author> readAll() throws SQLException {
+	public List<Author> readAll(int pageNo, int pageSize) throws SQLException {
+		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return  (List<Author>) read("select * from tbl_author", null);
 	}
 
@@ -64,6 +68,40 @@ public class AuthorDAO extends BaseDAO<Author> implements Serializable {
 		} else {
 			return null;
 		}
+	}
+		
+	
+	public int readAllCount() throws SQLException {
+		PreparedStatement stmt = getConnection().prepareStatement("select count(1) from tbl_author");
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) 
+			return rs.getInt(1);
+		else 
+			return 0;
+	}
+	
+
+	
+	@SuppressWarnings("unchecked")
+	public List<Author> searchAuthorByName(String searchString, int pageNo, int pageSize) throws SQLException {
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		if(searchString == null || searchString.trim().length() == 0) {
+			return readAll(pageNo, pageSize);
+		} else {
+			searchString = "%" + searchString + "%";
+			return (List<Author>) read("select * from tbl_author where authorName like ?", new Object[]{searchString});
+		}
+	}
+	public int searchAuthoryNameCount(String searchString) throws SQLException {
+		searchString = "%" + searchString + "%";
+		PreparedStatement stmt = getConnection().prepareStatement("select count(1) from tbl_author where authorName like ?");
+		stmt.setString(1, searchString);
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) 
+			return rs.getInt(1);
+		else 
+			return 0;
 	}
 
 	@Override

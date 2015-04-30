@@ -144,8 +144,10 @@ public class BorrowerServlet extends HttpServlet {
 				BookLoan bookLoan = new BookLoan();
 				bookLoan.setBook(book);
 				bookLoan.setBorrower(borrower);
+				BookLoan original  =new BorrowerService().readAllByBorrowerBook(borrower, book);
+				
 				bookLoan.setLibraryBranch(libraryBranch);
-				new BorrowerService().deleteBookLoan(bookLoan);
+				new BorrowerService().deleteBookLoan(bookLoan,original.getLibraryBranch());
 			}
 			request.setAttribute("result", "book returns  succesfull!");
 

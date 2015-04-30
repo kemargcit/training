@@ -11,9 +11,11 @@ import java.util.List;
 import com.gcit.lms.dao.BookCopyDAO;
 import com.gcit.lms.dao.BookLoanDAO;
 import com.gcit.lms.dao.BorrowerDAO;
+import com.gcit.lms.domain.Book;
 import com.gcit.lms.domain.BookCopy;
 import com.gcit.lms.domain.BookLoan;
 import com.gcit.lms.domain.Borrower;
+import com.gcit.lms.domain.LibraryBranch;
 
 /**
  * @author kemar
@@ -61,11 +63,10 @@ public class BorrowerService {
 			throw e;
 		}
 	}
-	public void  deleteBookLoan(BookLoan bookLoan) throws Exception{
+	public void  deleteBookLoan(BookLoan bookLoan, LibraryBranch originlibraryBranch) throws Exception{
 		Connection conn = ConnectionUtil.getConnection();
 		try {
-			//delete book loan record
-			new BookLoanDAO(conn).deleteBookLoan(bookLoan);
+			
 			
              //increase book copy at return branch
 			BookCopy bookCopy = this.readOne(bookLoan.getLibraryBranch().getBranchId(), 
@@ -83,12 +84,23 @@ public class BorrowerService {
 		    
 			new BookCopyDAO(conn).updateBookCopies(bookCopy);
 			}
+			
+			//delete book loan record
+			bookLoan.setLibraryBranch(originlibraryBranch);
+			new BookLoanDAO(conn).deleteBookLoan(bookLoan);
 			conn.commit();
 		} catch(Exception e) {
 			conn.rollback();
 			throw e;
 		}
 	}
+	
+	public  BookLoan readAllByBorrowerBook(Borrower borrower,Book book) throws Exception {
+		Connection conn = ConnectionUtil.getConnection();
+
+		return new BookLoanDAO(conn).readAllByBorrowerBook(borrower, book).get(0);
+	}
+
 	}
 
 

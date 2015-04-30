@@ -5,7 +5,6 @@ package com.gcit.lms.service;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -105,7 +104,7 @@ public void addAuthor(Author author) throws SQLException, ClassNotFoundException
 }
 public List<Author> readAllAuthors() throws SQLException, ClassNotFoundException {
 	Connection conn = ConnectionUtil.getConnection();
-	List<Author> authors=new AuthorDAO(conn).readAll();
+	List<Author> authors=new AuthorDAO(conn).readAll(1,10);
 	
 	return authors;
 	
@@ -255,5 +254,30 @@ public void overideDueDate(BookLoan bookLoan) throws Exception{
 		throw e;
 	}
 }
+public List<Author> getAuthors() throws Exception {
+	AuthorDAO aDAO = new AuthorDAO(ConnectionUtil.getConnection());
 
+	return aDAO.readAll(1,10);
+}
+
+public int getAuthorCount() throws Exception{
+	Connection conn = ConnectionUtil.getConnection();
+ 
+	return new AuthorDAO(conn).readAllCount();
+}
+
+public List<Author> searchAuthorByName(String searchString,int pageNo, int pageSize ) throws Exception {
+	AuthorDAO aDAO = new AuthorDAO(ConnectionUtil.getConnection());
+	aDAO.setPageNo(pageNo);
+	aDAO.setPageSize(pageSize);
+	
+	return  aDAO.searchAuthorByName(searchString, pageNo, pageSize);
+}
+public int searchAuthorCount(String searchString) throws Exception{
+	Connection conn = ConnectionUtil.getConnection();
+	return new AuthorDAO(conn).searchAuthoryNameCount(searchString);
+	
+}
+
+	
 }

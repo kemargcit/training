@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+
 public abstract class BaseDAO<T> implements Serializable{
 	
-	/**
-	 * 
-	 */
+	private int pageNo = -1;
+	private int pageSize = 10;
 	private static final long serialVersionUID = 8343156771650211516L;
 	/**
 	 * 
@@ -21,8 +21,14 @@ public abstract class BaseDAO<T> implements Serializable{
 	public BaseDAO(Connection conn) {
 		this.conn = conn;
 	}
-
-	public List<?> read(String query, Object[] vals) throws SQLException {
+public List<?> read(String query, Object[] vals) throws SQLException {
+		
+		if(getPageNo() > -1) {
+			int start = ((pageNo-1)*10);
+			//if(start > 0) start++;
+			query = query + " LIMIT " + start + "," + pageSize;
+		}
+		
 		PreparedStatement stmt = getConnection().prepareStatement(query);
 		int count = 1;
 		if(vals != null) {
@@ -34,6 +40,30 @@ public abstract class BaseDAO<T> implements Serializable{
 
 		return mapResults(rs);
 	}
+	/**
+ * @return the pageNo
+ */
+public int getPageNo() {
+	return pageNo;
+}
+/**
+ * @param pageNo the pageNo to set
+ */
+public void setPageNo(int pageNo) {
+	this.pageNo = pageNo;
+}
+/**
+ * @return the pageSize
+ */
+public int getPageSize() {
+	return pageSize;
+}
+/**
+ * @param pageSize the pageSize to set
+ */
+public void setPageSize(int pageSize) {
+	this.pageSize = pageSize;
+}
 	protected abstract List<?> mapResults(ResultSet rs) throws SQLException;
 	
 	public List<?> readFirstLevel(String query, Object[] vals) throws SQLException {
@@ -76,7 +106,7 @@ public abstract class BaseDAO<T> implements Serializable{
 			return -1;
 	}
 
-	private Connection getConnection() throws SQLException {
+	protected Connection getConnection() throws SQLException {
 		return conn;
 	}
 

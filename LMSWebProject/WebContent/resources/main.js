@@ -4,7 +4,7 @@
 $( document ).ready(function() {
 	$('a[rel=popover]').popover({
 	    html: 'true',
-	placement: 'right'
+	placement: 'left'
 	})
 
 
