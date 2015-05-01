@@ -132,7 +132,8 @@ public class AdministratorServlet extends HttpServlet {
 					
 					
 					//my-edit button atempt two
-//					str.append("<td><div> <a id='ed' href='#' class='btn btn-info'"
+
+//                     str.append("<td><div> <a id='ed' href='#' class='btn btn-info'"
 //							+ "rel='popover' data-togle='modal' data-content='<form  > "
 //							+ "<label>id :</label> "
 //							+ "<input '/>"

@@ -28,7 +28,58 @@ int count = 0;
 <!--
 	//-->
 	function pageAuthors(pageNo) {
+		var pageCount=0;
+		 $.ajax({
+		url : "getCountForSearch",
+		data : {
+			searchString : $("#searchString").val(),
 
+		}
+	}).done(function(data) {
+         
+          var pageSize = $("#pageSize").val();
+          
+          pageCount = data/pageSize;
+			//alert(pageCount);
+
+		
+	});
+		if(pageNo==-1){
+			var curpage = $("#pageNo").val();
+			$("#pageNo").val(curpage-1)
+			$.ajax({
+				url : "pageAuthors",
+				data : {
+					searchString : $("#searchString").val(),
+					pageNo : $("#pageNo").val(),
+					pageSize : $("#pageSize").val()
+				}
+			}).done(function(data) {
+				$("#resultSection").html(data);
+			});
+		}
+		else if(pageNo==-2){
+			    alert(pageCount);
+			var curpage = $("#pageNo").val();
+			if((parseInt(curpage)+1)>pageCount ){
+				$("#pageNo").val(parseInt(curpage));
+				
+			}else{
+ 			$("#pageNo").val(parseInt(curpage)+1);
+			}
+ 			$.ajax({
+				url : "pageAuthors",
+				data : {
+					searchString : $("#searchString").val(),
+					pageNo : $("#pageNo").val(),
+					pageSize : $("#pageSize").val()
+				}
+			}).done(function(data) {
+				$("#resultSection").html(data);
+			});
+		}
+		
+		else{
 		$("#pageNo").val(pageNo);
 		$.ajax({
 			url : "pageAuthors",
@@ -40,7 +91,7 @@ int count = 0;
 		}).done(function(data) {
 			$("#resultSection").html(data);
 		});
-
+		}
 	}
 
 	function searchAuthors() {
@@ -48,7 +99,7 @@ int count = 0;
 			url : "pageAuthors",
 			data : {
 				searchString : $("#searchString").val(),
-				pageNo : $("#pageNo").val(),
+				pageNo : 1,
 				pageSize : $("#pageSize").val()
 			}
 		}).done(function(data) {
@@ -57,7 +108,24 @@ int count = 0;
 		
 	}
 
-	
+	/* function deleteAuthor(id) {
+		location.href = 'deleteAuthor?authorId=' + id;
+		$("#myModald").modal('show');
+
+	}
+	function editAuthor(id) {
+		href = 'editAuthor.jsp?authorIdToEdit' + id;
+
+	}
+
+	function editAuthor() {
+		$('a[rel=popover]').popover({
+			html : 'true',
+			placement : 'left'
+		})
+
+	}
+ */
 	$(document).ready(function() {
 		$("#result").fadeOut(2500);
 
@@ -70,7 +138,9 @@ int count = 0;
 
 <nav>
 	<ul class="pagination">
-
+	
+           		<li><a href="javascript:pageAuthors(-1);"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+           
 		<%
 			int end = (count / pageSize);
 			if (count % pageSize != 0)
@@ -81,10 +151,10 @@ int count = 0;
 		<%
 			}
 		%>
+           		<li><a href="javascript:pageAuthors(-2);"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
 
 	</ul>
 </nav>
-<form action="searchAuthors" method="post">
 	<input type="text" id="searchString" name="searchString"
 		value="${searchString}" class="col-md-8"
 		placeholder="Enter string to search Author Name" /><input
@@ -92,7 +162,6 @@ int count = 0;
 	<input type="hidden" id="pageNo" name="pageNo" value="<%=pageNo%>" />
 	<input type="hidden" id="pageSize" name="pageSize"
 		value="<%=pageSize%>" />
-</form>
 
 <table class="table" id="resultSection">
 	<tr>
