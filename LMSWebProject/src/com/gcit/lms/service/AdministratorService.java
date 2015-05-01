@@ -23,6 +23,7 @@ import com.gcit.lms.domain.Genre;
 import com.gcit.lms.domain.LibraryBranch;
 import com.gcit.lms.domain.Publisher;
 
+import org.owasp.validator.html.*;
 /**
  * @author kemar
  *Apr 21, 20151:43:20 PM
@@ -92,8 +93,35 @@ public void deleteBook(Book book) throws SQLException, ClassNotFoundException{
 		throw e;
 	}
 }
-public void addAuthor(Author author) throws SQLException, ClassNotFoundException {
-	Connection conn = ConnectionUtil.getConnection();
+public void addAuthor(Author author) throws SQLException {
+	
+   /* String POLICY_FILE_LOCATION = "/antisamy-1.4.1.xml"; // Path to policy file
+	String dirtyInput = author.getAuthorName();
+	Policy policy = null;
+	try {
+		policy = Policy.getInstance(POLICY_FILE_LOCATION);
+	} catch (PolicyException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	} // Create Policy object
+	AntiSamy as = new AntiSamy(); // Create AntiSamy object
+	CleanResults cr = null;
+	try {
+		cr = as.scan(dirtyInput, policy, AntiSamy.SAX);
+	} catch (ScanException | PolicyException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	} // Scan dirtyInput
+	author.setAuthorName(cr.getCleanHTML());
+	*/
+	
+	Connection conn = null;
+	try {
+		conn = ConnectionUtil.getConnection();
+	} catch (ClassNotFoundException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 	try {
 		new AuthorDAO(conn).addAuthor(author);
 		conn.commit();

@@ -104,47 +104,7 @@ public class AdministratorServlet extends HttpServlet {
 				     str.append( "<button class='btn btn-xs btn-danger' type='button' data-toggle='modal' data-target='#confirmDelete' data-title='Delete Author' data-message='Are you sure you want to delete this Author ?'>");
 				     str.append("<i class='glyphicon glyphicon-trash'></i> Delete</button></form></td></tr>");
 			
-				     
-				     
-				     
-					
-					
-					
-					
-					//my- delete with onclick(works)
-				/*str.append("<td><button id='deleteBtn' data-toggle='modal' data-target='#confirmDelete' class='btn btn-danger' onclick='deleteAuthor("+a.getAuthorId()+")';>"
-					+ "<i class='glyphicon glyphicon-trash'></i> Delete</button></td></tr>");*/
-					
-					
-					//my-edit button
-					/*str.append("<td><div ><div > <a href='#' class='btn btn-info'"
-							+ "rel='popover' data-togle='modal' data-content='<form id='mainForm' name='mainForm' method='get' action='editAuthor'>");
-					str.append("<p><label>id :</label><input type='text' readonly='readonly' value'<%=a.getAuthorId()%>' id='txtName' name='authorId' />"
-);
-					
-					str.append(   "</p><p><label>Name :</label><input type='text' value='<%=a.getAuthorName()%>' id='txtName' name='authorName' /></p>"); 
-					str.append(    "<p><input type='submit' name='Submit' value='Submit' /></p>");
-							
-					str.append("</form>' data-placement='top' data-original-title='Fill in form'> <i class='glyphicon glyphicon-edit'></i>Edit</a></div></div></td>" );*/
-					
-					//str.append("<td><button id='ed'> click</button></td>");
-					
-					
-					
-					//my-edit button atempt two
-
-//                     str.append("<td><div> <a id='ed' href='#' class='btn btn-info'"
-//							+ "rel='popover' data-togle='modal' data-content='<form  > "
-//							+ "<label>id :</label> "
-//							+ "<input '/>"
-//							
-//							+ "</form>'"
-//							+ " data-placement='top' data-original-title='Fill in form' onclick='editAuthor()';"   
-//							+ "><i class='glyphicon glyphicon-edit'></i>Edit</a><div></td>");
-//					
-					
-					
-					
+				  
 					
 					
 				}
@@ -688,7 +648,7 @@ public class AdministratorServlet extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	public void addAuthor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void addAuthor(HttpServletRequest request, HttpServletResponse response) throws  IOException {
 		//addAuthor
 		String authorName = request.getParameter("authorName");
 
@@ -706,7 +666,12 @@ public class AdministratorServlet extends HttpServlet {
 
 		RequestDispatcher rd = getServletContext().getRequestDispatcher(
 				"/addAuthor.jsp");
-		rd.forward(request, response);
+		try {
+			rd.forward(request, response);
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void pageAuthors(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {

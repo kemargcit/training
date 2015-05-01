@@ -59,7 +59,7 @@ int count = 0;
 			});
 		}
 		else if(pageNo==-2){
-			    alert(pageCount);
+			    //alert(pageCount);
 			var curpage = $("#pageNo").val();
 			if((parseInt(curpage)+1)>pageCount ){
 				$("#pageNo").val(parseInt(curpage));
@@ -96,36 +96,42 @@ int count = 0;
 
 	function searchAuthors() {
 		$.ajax({
-			url : "pageAuthors",
-			data : {
-				searchString : $("#searchString").val(),
-				pageNo : 1,
-				pageSize : $("#pageSize").val()
-			}
-		}).done(function(data) {
-			$("#resultSection").html(data);
-		});
+			  url: "getCountForSearch",
+			  data: {
+				  		searchString: $("#searchString").val()
+				  	}
+			}).done(function(data) {
+				//alert(data);
+				var pageSectionString = "<nav><ul class='pagination'>";
+				var end = (data/10);
+				if(data%5 != 0) 
+					end = end+1;
+				pageSectionString = pageSectionString+"<li><a href='javascript:pageAuthors(-1);'><i class='glyphicon glyphicon-chevron-left'></i></a></li> ";
+				for(var i = 1; i <= end; i++) { 
+					pageSectionString = pageSectionString+" <li><a href='javascript:pageAuthors("+i+");'>"+i+"</a></li> ";
+				}
+				pageSectionString = pageSectionString+"<li><a href='javascript:pageAuthors(-2);'><i class='glyphicon glyphicon-chevron-right'></i></a></li> ";
+
+				pageSectionString = pageSectionString+"</ul></nav>";
+				
+				$("#pageSection").html(pageSectionString);
+				
+				$.ajax({
+					  url: "pageAuthors",
+					  data: {
+						  		searchString: $("#searchString").val(),
+						  		pageNo:  $("#pageNo").val(),
+						  		pageSize: $("#pageSize").val()
+						  	}
+					}).done(function(data) {
+					  //alert(data);
+					  $("#resultSection").html(data);
+					});
+			});
 		
-	}
-
-	/* function deleteAuthor(id) {
-		location.href = 'deleteAuthor?authorId=' + id;
-		$("#myModald").modal('show');
-
-	}
-	function editAuthor(id) {
-		href = 'editAuthor.jsp?authorIdToEdit' + id;
-
-	}
-
-	function editAuthor() {
-		$('a[rel=popover]').popover({
-			html : 'true',
-			placement : 'left'
-		})
-
-	}
- */
+		
+	} 
+	
 	$(document).ready(function() {
 		$("#result").fadeOut(2500);
 
@@ -135,6 +141,7 @@ int count = 0;
 <div id="result" style="background-color: blue">
 	<h4>${result}</h4>
 </div>
+<div id="pageSection">
 
 <nav>
 	<ul class="pagination">
@@ -155,6 +162,9 @@ int count = 0;
 
 	</ul>
 </nav>
+
+</div>
+<form>
 	<input type="text" id="searchString" name="searchString"
 		value="${searchString}" class="col-md-8"
 		placeholder="Enter string to search Author Name" /><input
@@ -162,7 +172,7 @@ int count = 0;
 	<input type="hidden" id="pageNo" name="pageNo" value="<%=pageNo%>" />
 	<input type="hidden" id="pageSize" name="pageSize"
 		value="<%=pageSize%>" />
-
+</form>
 <table class="table" id="resultSection">
 	<tr>
 		<th>Author Id</th>

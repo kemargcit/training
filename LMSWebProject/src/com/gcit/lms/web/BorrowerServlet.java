@@ -1,19 +1,17 @@
 package com.gcit.lms.web;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.gcit.lms.domain.Book;
 import com.gcit.lms.domain.BookCopy;
@@ -26,7 +24,7 @@ import com.gcit.lms.service.BorrowerService;
 /**
  * Servlet implementation class BorrowerServlet
  */
-@WebServlet({"/getBorrowerInfo","/getBooksByBranchId","/borrowBook","/Returns","/submitReturn"})
+@WebServlet({"/getBorrowerInfo","/getBooksByBranchId","/borrowBook","/Returns","/submitReturn","/borrowerLogin","/borrowerLogout"})
 public class BorrowerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -103,14 +101,20 @@ public class BorrowerServlet extends HttpServlet {
 				request.getContextPath().length(), request.getRequestURI().length());
 
 		switch (function) {
-		case "/getBorrowerInfo":
-			getBorrowerInfo(request, response);
-
-			break;
+		
 		case "/submitReturn":
 			submitReturn(request, response);
 
 			break;
+		case "/borrowerLogin":
+			loginBorrower(request, response);
+
+			break;
+		case "/borrowerLogout":
+			logoutBorrower(request, response);
+
+			break;
+
 		default:
 			break;
 	}
@@ -118,6 +122,87 @@ public class BorrowerServlet extends HttpServlet {
 
 }
 	
+	/**
+	 * @param request
+	 * @param response
+	 */
+	private void logoutBorrower(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		response.setContentType("text/html");
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("JSESSIONID")){
+               // System.out.println("JSESSIONID="+cookie.getValue());
+            	cookie.setMaxAge(0);
+                break;
+            }
+        }
+        }
+        //invalidate the session if exists
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        try {
+			response.sendRedirect("Borrower.jsp");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void loginBorrower(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+   		int cardNo = Integer.parseInt(request.getParameter("cardNo"));
+		Borrower borrower = null;
+		try {
+			borrower = new BorrowerService().getBorrowerByCardNo(cardNo);
+			
+		} catch (Exception e1) {
+     
+			
+			e1.printStackTrace();
+		}
+		
+		if(borrower==null){
+			request.setAttribute("loginMsg", "login err:user doesnt exist");
+
+			RequestDispatcher rd = getServletContext().getRequestDispatcher(
+					"/Borrower.jsp");
+			rd.forward(request, response);
+						
+		}else{
+
+   		HttpSession session = request.getSession();
+        session.setAttribute("user",String.valueOf(borrower.getCardNo()));
+        request.setAttribute("borrower", borrower);
+        //setting session to expiry in 30 mins
+        session.setMaxInactiveInterval(30*60);
+        Cookie userName = new Cookie("user", borrower.getBorrowerName());
+        userName.setMaxAge(30*60);
+        response.addCookie(userName);
+        try {
+        	RequestDispatcher rd = getServletContext().getRequestDispatcher(
+					"/borrowerMain.jsp");
+			rd.forward(request, response);
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * @param request
 	 * @param response
@@ -233,26 +318,4 @@ RequestDispatcher rd = getServletContext().getRequestDispatcher(
 rd.forward(request, response);	
 	}
 
-	/**
-	 * @param request
-	 * @param response
-	 */
-	private void getBorrowerInfo(HttpServletRequest request,
-			HttpServletResponse response) {
-		
-		int cardNo = Integer.parseInt(request.getParameter("cardNo"));
-		try {
-			Borrower borrower = new BorrowerService().getBorrowerByCardNo(cardNo);
-			request.setAttribute("borrower", borrower);
-			List<BookLoan> bookLoans = new BorrowerService().readAllByBorrower(cardNo);
-			request.setAttribute("bookloans",bookLoans);
-
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(
-					"/borrowerMain.jsp");
-			rd.forward(request, response);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

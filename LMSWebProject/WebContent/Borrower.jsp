@@ -12,7 +12,7 @@
     margin: auto;
     }
 #bor{
- height: 100px;
+ height: 200px;
     width: 700px;  
      position: absolute;
     top:0;
@@ -25,14 +25,18 @@ text-align: center;
     }
   
   </style>
+  <%
+  %>
   
   <div id="bor">
-<form class="form-inline" role="form" method="post"  action="getBorrowerInfo">
+      ${loginMsg}
+ 
+<form class="form-inline" role="form" method="post"  action="borrowerLogin">
   <label class="aria-describedby">Welcome To the Borrower Section</label>
   <div class="form-group">
     <input placeholder="Enter cardNo" name="cardNo" id="cardNo"class="form-control input-lg" id="inputlg" type="text" ><br>
   </div>
-    <br><br><br><br>  <input class="btn-lg btn-info" type="submit" value="Enter">
+    <br><br><br><br><br><br><br>  <input class="btn-lg btn-info" type="submit" value="Enter">
     
   
 </form>
